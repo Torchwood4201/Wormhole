@@ -13,6 +13,7 @@ import { buildElement, Cube, Door, LightZone, Platform, Crusher } from '../world
 import type { ActionDef } from '../world/LevelData';
 import { Stalker } from '../entity/Stalker';
 import { Director } from '../entity/Director';
+import { depthForChamber, glitchRadiusForDepth } from '../entity/DepthDread';
 import { WaypointGraph } from '../entity/Waypoints';
 import { PostFX } from '../render/PostFX';
 import { LINES, lineDuration } from '../story/script';
@@ -196,6 +197,12 @@ export class Game {
 
     const zones = this.level.elements.filter((e): e is LightZone => e instanceof LightZone);
     this.stalker.configure(new WaypointGraph(data.waypoints ?? []), zones);
+
+    // Descent dread: the deeper the chamber, the less the horror lets go.
+    const depth = depthForChamber(id);
+    this.director.setDepth(depth);
+    this.stalker.setDepth(depth);
+    this.postfx.depth = depth;
 
     const mode = data.portalMode ?? 'both';
     this.gun.allowAmber = mode === 'both';
@@ -384,7 +391,11 @@ export class Game {
   playNamedSound(name: string): void {
     this.namedSound?.(name);
   }
-  /** Installed by the audio runtime. */
+
+  /** Blood flash from the carved wards ({ do: 'script', name: 'sigilFlash' }). */
+  flashSigil(v: number): void {
+    this.postfx.sigil = Math.min(1, this.postfx.sigil + v);
+  }  /** Installed by the audio runtime. */
   namedSound: ((name: string) => void) | null = null;
 
   /** Endings hand off to the credits screen (installed by the shell in M9). */
@@ -478,6 +489,18 @@ export class Game {
             }
             events.emit('lore.read', { id: target.terminal.loreId });
           }
+        } else if (target?.kind === 'tome') {
+          if (!target.tome.read) {
+            target.tome.markRead();
+            const line = LINES[target.tome.loreId];
+            if (line) {
+              events.emit('narrative.line', {
+                speaker: line.speaker, text: line.text, duration: lineDuration(line),
+              });
+            }
+            events.emit('lore.read', { id: target.tome.loreId });
+            this.director.spike(0.25);
+          }
         } else if (target?.kind === 'breaker') {
           if (!target.breaker.thrown) {
             target.breaker.throwSwitch();
@@ -491,6 +514,8 @@ export class Game {
         this.hud.showPrompt('<b>E</b> PICK UP');
       } else if (target?.kind === 'terminal' && !target.terminal.read) {
         this.hud.showPrompt('<b>E</b> READ');
+      } else if (target?.kind === 'tome' && !target.tome.read) {
+        this.hud.showPrompt('<b>E</b> READ THE BOUND SKIN');
       } else if (target?.kind === 'breaker' && !target.breaker.thrown) {
         this.hud.showPrompt('<b>E</b> THROW BREAKER');
       } else {
@@ -554,12 +579,22 @@ export class Game {
     this.gun.amber.updateProximity(cam.position);
     this.gun.cyan.updateProximity(cam.position);
 
-    // entity proximity → glitch; director tension → grain/vignette breathing
+    // entity proximity → glitch (radius widens with depth); director tension → grain/vignette breathing
     const stalkerVisible = this.stalker.state !== 'dormant';
+    const radius = glitchRadiusForDepth(this.director.depth);
     const prox = stalkerVisible
-      ? Math.max(0, 1 - this.stalker.distanceToPlayer / 7) : 0;
+      ? Math.max(0, 1 - this.stalker.distanceToPlayer / radius) : 0;
     this.postfx.glitch = prox * prox;
     this.postfx.tension = this.director.tension;
+    // ward-flash decays; deep dread bleeds back in with tension; otherworld
+    // shift rides depth x tension into the SH grade
+    this.postfx.sigil *= Math.exp(-_dt * 1.2);
+    this.postfx.sigil = Math.max(
+      this.postfx.sigil, this.director.depth * this.director.tension * 0.25,
+    );
+    this.postfx.rot = Math.max(0, Math.min(
+      1, this.director.depth * 0.6 + this.director.tension * 0.4,
+    ));
 
     this.renderer.webgl.setRenderTarget(this.postfx.target);
     this.renderer.webgl.render(this.scene, cam);

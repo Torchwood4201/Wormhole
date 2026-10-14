@@ -76,6 +76,10 @@ export const C05: ChamberData = {
     { kind: 'sign', pos: [0, 5, 4.0], dir: '-z', text: 'RANGE 05', sub: 'CONSERVATION OF MOMENTUM', size: 2.8 },
     { kind: 'sign', pos: [5, 3.1, -11.78], dir: '-z', text: '↓ IN', sub: 'OUT →', size: 1.6 },
     { kind: 'scratches', pos: [-8.0, 1.6, -8], dir: '+x', size: 1.8, seed: 61 },
+    // pre-project carvings marching down the shaft — the aperture oval, chewed in rock
+    { kind: 'sigil', pos: [-7.98, 4.2, -14], dir: '+x', size: 2.2, seed: 501 },
+    { kind: 'sigil', pos: [7.98, 3.0, -16], dir: '-x', size: 1.8, seed: 502, rot: 0.4 },
+    { kind: 'sigil', pos: [0, -4, -17.98], dir: '+z', size: 2.4, seed: 503 },
   ],
   elements: [
     // vertical lift up the start tower
@@ -86,6 +90,7 @@ export const C05: ChamberData = {
     // bridge from lift top to tower top (thin walkway at y 8)
     { type: 'door', id: 'dExit', pos: [0, 3, -30.25], size: [2.6, 3, 0.6], open: false },
     { type: 'terminal', id: 't1', pos: [-8.0, 1.7, 0], dir: '+x', loreId: 'c05.lore1' },
+    { type: 'terminal', id: 't2', pos: [-7.9, 1.7, -16], dir: '+x', loreId: 'c05.lore2' },
     { type: 'toxic', id: 'sump', pos: [0, -7.9, -21], size: [15.5, 0.4, 5.4] },
   ],
   waypoints: [
@@ -110,6 +115,7 @@ export const C05: ChamberData = {
         { do: 'entity', set: 'lurking', at: 'below' },
         { do: 'narrative', line: 'c05.depth', delay: 5 },
         { do: 'tension', value: 0.3, delay: 5 },
+        { do: 'script', name: 'sigilFlash', delay: 5 },
       ],
     },
     {

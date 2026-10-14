@@ -7,7 +7,8 @@ import {
 } from 'three';
 import {
   bloodTexture, ceilingTexture, concreteTexture, floorTexture, hazardTexture,
-  metalDarkTexture, metalTexture, panelTexture, scratchesTexture, toxicTexture,
+  metalDarkTexture, metalTexture, panelTexture, ritualTexture, scratchesTexture,
+  sigilTexture, toxicTexture,
 } from './TextureFactory';
 
 export type MaterialName =
@@ -92,4 +93,23 @@ export const decalMaterials = {
     map: scratchesTexture(seed), transparent: true, roughness: 0.9, depthWrite: false,
     polygonOffset: true, polygonOffsetFactor: -2,
   }),
+  /** Necronomicon wall sigil: carved glyphs around a spoke oval. Faintly
+   * self-lit — old blood remembers being spilled, and glows for it. */
+  sigil: (seed: number) => {
+    const tex = sigilTexture(seed);
+    return new MeshStandardMaterial({
+      map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.5,
+      transparent: true, roughness: 0.9, depthWrite: false,
+      polygonOffset: true, polygonOffsetFactor: -2,
+    });
+  },
+  /** Necronomicon ritual circle, for floors. Glows like the wall wards. */
+  ritual: (seed: number) => {
+    const tex = ritualTexture(seed);
+    return new MeshStandardMaterial({
+      map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.5,
+      transparent: true, roughness: 0.9, depthWrite: false,
+      polygonOffset: true, polygonOffsetFactor: -2,
+    });
+  },
 };

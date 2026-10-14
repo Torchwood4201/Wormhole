@@ -75,7 +75,10 @@ export const C07: ChamberData = {
     },
     { type: 'door', id: 'dExit', pos: [1.5, 2.5, -34.25], size: [3.2, 3, 0.6], open: false },
     { type: 'lightZone', id: 'zoneMid', pos: [-3, 3.5, -15], size: [6, 5, 5], active: true },
+    // a dead tree rooting in the sump — growing without light
+    { type: 'prop', id: 'tree1', pos: [4.5, 0.3, -12], prop: 'tree', seed: 703 },
     { type: 'terminal', id: 't1', pos: [-2.95, 2.7, -0.5], dir: '+x', loreId: 'c07.lore1' },
+    { type: 'terminal', id: 't2', pos: [-3, 2.7, -15], dir: '+x', loreId: 'c07.lore2' },
   ],
   waypoints: [
     { id: 'g1', pos: [8, 1.1, -2], links: ['g2'] },

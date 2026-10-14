@@ -87,12 +87,28 @@ export const C12: ChamberData = {
     { kind: 'sign', pos: [9, 4.6, -76.0], dir: '+z', text: 'SURFACE', sub: 'EMERGENCY ASCENT', size: 2.4 },
     { kind: 'blood', pos: [0, 0.01, -55], dir: '+y', size: 2.2, seed: 131 },
     { kind: 'scratches', pos: [-6.0, 2.2, -50], dir: '+x', size: 2.2, seed: 132 },
+    // the cult's copied wards on the dark wall bands — never on portal panels
+    { kind: 'sigil', pos: [-5.98, 2.2, -26], dir: '+x', size: 2.4, seed: 509 },
+    { kind: 'sigil', pos: [5.98, 2.2, -51], dir: '-x', size: 2.4, seed: 510, rot: 0.5 },
+    // the final circle, painted the way the carvings showed them, before the tear
+    { kind: 'ritual', pos: [0, 0.012, -69], dir: '+y', size: 9, seed: 601 },
+    { kind: 'sigil', pos: [-11.98, 2.5, -69], dir: '+x', size: 2.4, seed: 602 },
+    { kind: 'sigil', pos: [11.98, 2.5, -69], dir: '-x', size: 2.4, seed: 603 },
   ],
   elements: [
     { type: 'toxic', id: 'pit1', pos: [0, -5.9, -16], size: [11.5, 0.4, 7.4] },
     { type: 'toxic', id: 'pit2', pos: [0, -5.9, -36], size: [11.5, 0.4, 7.4] },
     { type: 'lightZone', id: 'seamFlood', pos: [0, 6, -64], size: [22, 11, 8], active: true },
     { type: 'terminal', id: 't1', pos: [-12.0, 1.7, -68], dir: '+x', loreId: 'c12.lore1' },
+    { type: 'terminal', id: 't2', pos: [11.9, 1.7, -72], dir: '-x', loreId: 'c12.lore2' },
+    // the gauntlet's congregation: hands out of the east dark, flesh on the west
+    { type: 'prop', id: 'hands1', pos: [5.6, 1.2, -26], dir: '-x', prop: 'hands', seed: 715 },
+    { type: 'prop', id: 'growth1', pos: [-5.6, 0.2, -50], dir: '+x', prop: 'growth', seed: 716 },
+    // what the cult left at the threshold
+    { type: 'prop', id: 'skulls1', pos: [2.5, 0, -55], prop: 'skulls', seed: 714 },
+    // twin guardians before the tear
+    { type: 'prop', id: 'idolW', pos: [-4.5, 0, -77], dir: '+z', prop: 'idol', seed: 712 },
+    { type: 'prop', id: 'idolE', pos: [4.5, 0, -77], dir: '+z', prop: 'idol', seed: 713 },
   ],
   waypoints: [
     { id: 'c1', pos: [0, 0, -2], links: ['c2'] },
@@ -133,6 +149,7 @@ export const C12: ChamberData = {
         { do: 'entity', set: 'banished' },
         { do: 'narrative', line: 'c12.choice', delay: 2.2 },
         { do: 'tension', value: 0.55 },
+        { do: 'script', name: 'sigilFlash', delay: 1 },
         { do: 'checkpoint' },
         { do: 'clearPortals' },
       ],

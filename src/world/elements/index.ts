@@ -9,10 +9,12 @@ import { ButtonPlate } from './ButtonPlate';
 import { Platform } from './Platform';
 import { ToxicPool, Crusher } from './Hazard';
 import { Terminal } from './Terminal';
+import { Tome } from './Tome';
+import { HorrorProp } from './HorrorProp';
 import { LightZone } from './LightZone';
 import { Breaker } from './Breaker';
 
-export { Door, Cube, ButtonPlate, Platform, ToxicPool, Crusher, Terminal, LightZone, Breaker };
+export { Door, Cube, ButtonPlate, Platform, ToxicPool, Crusher, Terminal, Tome, HorrorProp, LightZone, Breaker };
 
 export function buildElement(
   def: ElementDef,
@@ -41,6 +43,10 @@ export function buildElement(
       );
     case 'terminal':
       return new Terminal(def.id, def.pos, def.dir, def.loreId, scene);
+    case 'tome':
+      return new Tome(def.id, def.pos, def.loreId, def.seed ?? 1, scene);
+    case 'prop':
+      return new HorrorProp(def.id, def.pos, def.dir, def.prop, def.seed ?? 1, scene);
     case 'lightZone':
       return new LightZone(def.id, def.pos, def.size, def.active ?? true, scene);
     case 'breaker':

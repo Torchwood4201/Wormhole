@@ -38,8 +38,13 @@ export interface LightDef {
 
 export type Dir = '+x' | '-x' | '+y' | '-y' | '+z' | '-z';
 
+/** Necronomicon set dressing kinds (see HorrorProp). */
+export type PropKind =
+  | 'skulls' | 'heads' | 'daggers' | 'tree' | 'hands'
+  | 'eyes' | 'idol' | 'chains' | 'growth';
+
 export interface DecalDef {
-  kind: 'blood' | 'scratches' | 'sign';
+  kind: 'blood' | 'scratches' | 'sign' | 'sigil' | 'ritual';
   pos: V3;
   dir: Dir;                   // which way the decal faces (surface normal)
   size?: number;
@@ -63,6 +68,8 @@ export type ElementDef =
       period: number; phase?: number; active?: boolean;
     }
   | { type: 'terminal'; id: string; pos: V3; dir: Dir; loreId: string }
+  | { type: 'tome'; id: string; pos: V3; dir: Dir; loreId: string; seed?: number }
+  | { type: 'prop'; id: string; pos: V3; dir?: Dir; prop: PropKind; seed?: number }
   | { type: 'lightZone'; id: string; pos: V3; size: V3; active?: boolean }
   | { type: 'breaker'; id: string; pos: V3; dir: Dir };
 

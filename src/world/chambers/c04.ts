@@ -53,16 +53,21 @@ export const C04: ChamberData = {
     { kind: 'blood', pos: [-2, 0.01, -6], dir: '+y', size: 2.2, seed: 51 },
     { kind: 'scratches', pos: [-2.7, 0.012, -5.4], dir: '+y', size: 1.5, seed: 52 },
     { kind: 'scratches', pos: [-1.3, 0.012, -6.6], dir: '+y', size: 1.4, seed: 53, rot: 2.1 },
+    // older than the stain: a carved oval watches over it
+    { kind: 'sigil', pos: [-5.98, 1.9, -6], dir: '+x', size: 1.7, seed: 504 },
   ],
   elements: [
     { type: 'cube', id: 'cube1', pos: [-2, 0.5, -6] },
     { type: 'button', id: 'bA', pos: [3.5, 0, -6] },
     { type: 'door', id: 'dMid', pos: [0, 1.5, -14.25], size: [2.6, 3, 0.6], open: false },
     { type: 'button', id: 'bB', pos: [-3.5, 0, -20] },
+    // what the sump of room A kept: a pile of apology skulls
+    { type: 'prop', id: 'skulls1', pos: [-3.6, 0, -7.5], prop: 'skulls', seed: 701 },
     { type: 'door', id: 'dExit', pos: [0, 1.5, -26.25], size: [2.6, 3, 0.6], open: false },
     // sit just in front of the inner wall face (x=-6.0) so the CRT renders on
     // the wall instead of embedded inside it (was -6.2 → housing buried in wall)
     { type: 'terminal', id: 't1', pos: [-5.9, 1.7, -18], dir: '+x', loreId: 'c04.lore1' },
+    { type: 'terminal', id: 't2', pos: [-5.9, 1.7, -6], dir: '+x', loreId: 'c04.lore2' },
   ],
   triggers: [
     {

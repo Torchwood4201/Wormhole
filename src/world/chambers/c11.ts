@@ -82,6 +82,10 @@ export const C11: ChamberData = {
     { kind: 'sign', pos: [9.99, 2.8, -10], dir: '-x', size: 1.8, text: 'EAST FEED →', sub: '' },
     { kind: 'blood', pos: [-13.5, 0.01, -10], dir: '+y', size: 2.0, seed: 121 },
     { kind: 'scratches', pos: [-0.3, 1.8, -8.48], dir: '+z', size: 1.6, seed: 122 },
+    // carved into the core housing itself — maintenance never logged it
+    { kind: 'sigil', pos: [0.9, 2.5, -8.48], dir: '+z', size: 1.6, seed: 511 },
+    // the ward-ring the cult painted around the core
+    { kind: 'ritual', pos: [0, 0.012, -10], dir: '+y', size: 6, seed: 604 },
   ],
   elements: [
     // west wing: crushers guard the corridor; cube + b1 at the end. z-span 8.4
@@ -110,6 +114,16 @@ export const C11: ChamberData = {
     { type: 'door', id: 'dExit', pos: [0, 2, -20.25], size: [3.2, 4, 0.6], open: false },
     { type: 'terminal', id: 't1', pos: [-22.0, 1.7, -7], dir: '+x', loreId: 'c11.lore1' },
     { type: 'terminal', id: 't2', pos: [22.0, 1.7, -7], dir: '-x', loreId: 'c11.lore2' },
+    { type: 'terminal', id: 't3', pos: [21.9, 1.7, -12], dir: '-x', loreId: 'c11.lore4' },
+    // Halloran's warning, bound in skin — readable on its lectern
+    { type: 'tome', id: 'tome1', pos: [3.5, 1.06, -5], dir: '-z', loreId: 'c11.lore3', seed: 708 },
+    // the blood altar of the east feed
+    { type: 'prop', id: 'daggers1', pos: [20.5, 0, -7.5], prop: 'daggers', seed: 709 },
+    // winged guardians of the heart gate
+    { type: 'prop', id: 'idolW', pos: [-4, 0, -19.2], dir: '+z', prop: 'idol', seed: 710 },
+    { type: 'prop', id: 'idolE', pos: [4, 0, -19.2], dir: '+z', prop: 'idol', seed: 711 },
+    // flesh taking the core's base
+    { type: 'prop', id: 'growth1', pos: [2.2, 0.1, -11.5], prop: 'growth', seed: 717 },
   ],
   waypoints: [
     { id: 'r1', pos: [0, 0, 0], links: ['r2', 'r4'] },

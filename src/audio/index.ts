@@ -9,6 +9,7 @@ import { TensionMix } from './TensionMix';
 import { events } from '../core/Events';
 import type { Game } from '../core/Game';
 import { CHAMBERS } from '../world/chambers';
+import { depthForChamber } from '../entity/DepthDread';
 
 export class AudioRuntime {
   engine = new AudioEngine();
@@ -45,6 +46,7 @@ export class AudioRuntime {
     });
     events.on('chamber.loaded', ({ id }) => {
       const mood = CHAMBERS.get(id)?.mood ?? 'labs';
+      this.ambience.setDepth(depthForChamber(id));
       if (this.engine.started) this.ambience.setMood(mood);
       else this.pendingMood = mood;
     });

@@ -60,13 +60,18 @@ export const C06: ChamberData = {
     { kind: 'scratches', pos: [4.05, 2.2, -8], dir: '-x', size: 2.0, seed: 71 },
     { kind: 'scratches', pos: [4.05, 1.8, -19], dir: '-x', size: 2.2, seed: 72, rot: 0.9 },
     { kind: 'blood', pos: [3.4, 0.01, -24], dir: '+y', size: 1.4, seed: 73 },
+    // pre-project carving on the gallery wall — the staff never explained it
+    { kind: 'sigil', pos: [-3.98, 2.4, -14], dir: '+x', size: 1.8, seed: 505 },
   ],
   elements: [
     // two floodlit safe zones the player walks through
     { type: 'lightZone', id: 'zoneA', pos: [0, 2.5, -6], size: [5, 5, 4], active: true },
     { type: 'lightZone', id: 'zoneB', pos: [0, 2.5, -28], size: [5, 5, 4], active: true },
+    // Eight's cohort observers — what is left of them, inside the pen
+    { type: 'prop', id: 'heads1', pos: [6.5, 0, -12], prop: 'heads', seed: 702 },
     { type: 'terminal', id: 't1', pos: [-4.0, 1.7, -4], dir: '+x', loreId: 'c06.lore1' },
     { type: 'terminal', id: 't2', pos: [-4.0, 1.7, -26], dir: '+x', loreId: 'c06.lore2' },
+    { type: 'terminal', id: 't3', pos: [-4.0, 1.7, -13], dir: '+x', loreId: 'c06.lore3' },
   ],
   waypoints: [
     { id: 'pen1', pos: [7, 0, 0], links: ['pen2'] },

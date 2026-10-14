@@ -6,6 +6,7 @@ import { Vector3 } from 'three';
 import { AudioEngine } from './AudioEngine';
 import { Sfx } from './Sfx';
 import type { Mood } from '../world/LevelData';
+import { clankWindowForDepth } from '../entity/DepthDread';
 
 interface DroneSpec {
   type: OscillatorType;
@@ -60,8 +61,14 @@ export class Ambience {
   private layerGain: GainNode | null = null;
   private clankTimer = 6;
   private playerPos = new Vector3();
+  /** 0 surface .. 1 the Seam. Deeper = the facility mutters more often. */
+  depth = 0;
 
   constructor(private engine: AudioEngine, private sfx: Sfx) {}
+
+  setDepth(d: number): void {
+    this.depth = Math.max(0, Math.min(1, d));
+  }
 
   setMood(mood: Mood): void {
     this.stop();
@@ -110,7 +117,8 @@ export class Ambience {
     if (!this.engine.started) return;
     this.clankTimer -= dt;
     if (this.clankTimer <= 0) {
-      this.clankTimer = 9 + Math.random() * 18;
+      const { min, span } = clankWindowForDepth(this.depth);
+      this.clankTimer = min + Math.random() * span;
       // distant noise from a random direction around the player
       const ang = Math.random() * Math.PI * 2;
       const dist = 14 + Math.random() * 18;

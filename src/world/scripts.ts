@@ -63,8 +63,7 @@ export const SCRIPTS: Record<string, ScriptFn> = {
     }, 2600);
   },
 
-  /** C11: the heart gate opens only while BOTH feed buttons are held. */
-  c11check: (game) => {
+  /** C11: the heart gate opens only while BOTH feed buttons are held. */  c11check: (game) => {
     const level = game.level;
     if (!level) return;
     const b1 = level.elementById.get('b1') as { pressed?: boolean } | undefined;
@@ -72,6 +71,13 @@ export const SCRIPTS: Record<string, ScriptFn> = {
     if (b1?.pressed && b2?.pressed) {
       game.runAction({ do: 'door', id: 'dExit', open: true });
     }
+  },
+
+  /** Ward-flash: the carved ovals look back — blood pulse + dread spike. */
+  sigilFlash: (game) => {
+    game.director.spike(0.4);
+    game.flashSigil(0.9);
+    say('c12.gaze');
   },
 
   /** C12 ending A: overload the Seam. */

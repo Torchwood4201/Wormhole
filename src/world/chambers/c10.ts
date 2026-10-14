@@ -66,7 +66,7 @@ export const C10: ChamberData = {
   ],
   lights: [
     { type: 'point', pos: [0, 16.5, -2], intensity: 26, distance: 20, flicker: 'subtle', fixture: true },
-    { type: 'point', pos: [0, 10, -14], intensity: 18, distance: 18, flicker: 'heavy', fixture: true },
+    { type: 'point', pos: [0, 10, -14], intensity: 18, distance: 18, flicker: 'dying', fixture: true },
     { type: 'point', pos: [5, 6.5, -28], intensity: 16, distance: 14, fixture: true },
     { type: 'point', pos: [-4, 6.5, -31], intensity: 12, distance: 12, flicker: 'dying', fixture: true },
     { type: 'point', pos: [0, -1.5, -17], intensity: 9, distance: 13, color: 0x3a5a2a },
@@ -93,7 +93,11 @@ export const C10: ChamberData = {
     },
     { type: 'lightZone', id: 'flood', pos: [4.5, 5.5, -33], size: [6, 5, 2.4], active: false },
     { type: 'door', id: 'dExit', pos: [4.5, 4.5, -34.25], size: [3.1, 3, 0.6], open: false },
+    // the shaft's old rigging — bells that stopped ringing
+    { type: 'prop', id: 'chains1', pos: [-5, 18, -20], prop: 'chains', seed: 706 },
+    { type: 'prop', id: 'eyes1', pos: [4, 18, -10], prop: 'eyes', seed: 707 },
     { type: 'terminal', id: 't1', pos: [-8.0, 13.7, -2], dir: '+x', loreId: 'c10.lore1' },
+    { type: 'terminal', id: 't2', pos: [0, 4.7, -31], dir: '+z', loreId: 'c10.lore2' },
   ],
   triggers: [
     {

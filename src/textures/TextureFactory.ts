@@ -364,3 +364,265 @@ export function ceilingTexture(seed: number): CanvasTexture {
   stains(ctx, W, W, rng, 8, 'rgba(8,9,10,A)', 0.3);
   return finalize(canvas);
 }
+
+// ================= Necronomicon: the Seam's script =================
+// Carved-black + dried-blood glyphs. All seeded, transparent, 256x256.
+
+type Rng = () => number;
+
+/** One glyph of the Seam's alphabet, centered at (x,y), roughly size s. */
+function drawGlyph(
+  ctx: CanvasRenderingContext2D, rng: Rng,
+  x: number, y: number, s: number, rot: number,
+  style: string, width: number,
+): void {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+  ctx.strokeStyle = style;
+  ctx.fillStyle = style;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  const kind = Math.floor(rng() * 5);
+  if (kind === 0) {
+    // triangle (open or filled eye of the pyramid)
+    ctx.beginPath();
+    ctx.moveTo(0, -s * 0.55);
+    ctx.lineTo(s * 0.55, s * 0.45);
+    ctx.lineTo(-s * 0.55, s * 0.45);
+    ctx.closePath();
+    ctx.stroke();
+    if (rng() < 0.4) {
+      ctx.beginPath();
+      ctx.arc(0, s * 0.1, s * 0.1, 0, 7);
+      ctx.fill();
+    }
+  } else if (kind === 1) {
+    // watching eye: ellipse + pupil dot
+    ctx.beginPath();
+    ctx.ellipse(0, 0, s * 0.55, s * 0.32, 0, 0, 7);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, s * 0.11, 0, 7);
+    ctx.fill();
+  } else if (kind === 2) {
+    // circle-and-dot (aperture seed)
+    ctx.beginPath();
+    ctx.arc(0, 0, s * 0.42, 0, 7);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, s * 0.09, 0, 7);
+    ctx.fill();
+  } else if (kind === 3) {
+    // jagged stroke: 3-5 segment ward-scratch
+    const n = 3 + Math.floor(rng() * 3);
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.5, (rng() - 0.5) * s);
+    for (let i = 1; i <= n; i++) {
+      ctx.lineTo(-s * 0.5 + (s * i) / n, (rng() - 0.5) * s);
+    }
+    ctx.stroke();
+  } else {
+    // hooked cross
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.45, 0);
+    ctx.lineTo(s * 0.45, 0);
+    ctx.moveTo(0, -s * 0.45);
+    ctx.quadraticCurveTo((rng() - 0.5) * s * 0.4, s * 0.1, s * 0.3, s * 0.45);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/** Erode carved strokes: punch speckles out so grooves look chewed by age. */
+function erodeCarving(ctx: CanvasRenderingContext2D, rng: Rng, W: number, count: number): void {
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  for (let i = 0; i < count; i++) {
+    ctx.fillStyle = `rgba(0,0,0,${rng() * 0.6})`;
+    ctx.fillRect(rng() * W, rng() * W, 1 + rng() * 3, 1 + rng() * 2);
+  }
+  ctx.restore();
+}
+
+/** Two-pass carve: dark chisel groove first, dried-blood trace second. */
+function carvePass(
+  ctx: CanvasRenderingContext2D, rng: Rng,
+  draw: (style: string, width: number, dx: number, dy: number) => void,
+): void {
+  void rng;
+  draw('rgba(8,6,6,0.9)', 5, 1, 1);
+  draw('rgba(122,18,18,0.85)', 2, 0, 0);
+}
+
+/** Wall sigil: cluster of glyphs around a spoke aperture-oval, carved + blooded. */
+export function sigilTexture(seed: number): CanvasTexture {
+  const W = 256;
+  const [canvas, ctx] = makeCanvas(W, W);
+  const rng = mulberry32(seed);
+  const cx = W / 2 + (rng() - 0.5) * 20, cy = W / 2 + (rng() - 0.5) * 20;
+  carvePass(ctx, rng, (style, width, dx, dy) => {
+    // the open mouth: vertical oval with spokes
+    ctx.save();
+    ctx.translate(cx + dx, cy + dy);
+    ctx.strokeStyle = style;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 28, 44, 0, 0, 7);
+    ctx.stroke();
+    const spokes = 6 + Math.floor(rng() * 3);
+    for (let i = 0; i < spokes; i++) {
+      const a = (i / spokes) * Math.PI * 2 + rng() * 0.3;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * 28, Math.sin(a) * 44);
+      ctx.lineTo(Math.cos(a) * (44 + rng() * 22), Math.sin(a) * (58 + rng() * 22));
+      ctx.stroke();
+    }
+    ctx.restore();
+    // attendant glyphs clustered around the oval
+    const n = 3 + Math.floor(rng() * 3);
+    for (let i = 0; i < n; i++) {
+      const a = rng() * Math.PI * 2;
+      const r = 62 + rng() * 48;
+      drawGlyph(
+        ctx, rng,
+        cx + Math.cos(a) * r + dx, cy + Math.sin(a) * r + dy,
+        22 + rng() * 20, rng() * Math.PI * 2, style, width,
+      );
+    }
+  });
+  erodeCarving(ctx, rng, W, 400);
+  return finalize(canvas, false);
+}
+
+/** Ritual circle: concentric wards with glyph ring, for floors. */
+export function ritualTexture(seed: number): CanvasTexture {
+  const W = 256;
+  const [canvas, ctx] = makeCanvas(W, W);
+  const rng = mulberry32(seed);
+  const cx = W / 2, cy = W / 2;
+  carvePass(ctx, rng, (style, width, dx, dy) => {
+    ctx.save();
+    ctx.translate(cx + dx, cy + dy);
+    ctx.strokeStyle = style;
+    ctx.lineWidth = width;
+    for (const r of [118, 88, 40]) {
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, 7);
+      ctx.stroke();
+    }
+    // radial spokes between outer and middle rings
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + rng() * 0.2;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * 88, Math.sin(a) * 88);
+      ctx.lineTo(Math.cos(a) * 118, Math.sin(a) * 118);
+      ctx.stroke();
+    }
+    ctx.restore();
+    // glyph ring on r=103, rotated tangent
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2;
+      drawGlyph(
+        ctx, rng, cx + Math.cos(a) * 103 + dx, cy + Math.sin(a) * 103 + dy,
+        15 + rng() * 6, a + Math.PI / 2, style, Math.max(1.5, width - 1),
+      );
+    }
+    // center: small open mouth
+    ctx.save();
+    ctx.translate(cx + dx, cy + dy);
+    ctx.strokeStyle = style;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 12, 19, 0, 0, 7);
+    ctx.stroke();
+    ctx.restore();
+  });
+  // blood drips toward the center (reuse blood idiom)
+  for (let i = 0; i < 5; i++) {
+    const a = rng() * Math.PI * 2;
+    const x = cx + Math.cos(a) * (30 + rng() * 50);
+    const y = cy + Math.sin(a) * (30 + rng() * 50);
+    const len = 12 + rng() * 26;
+    const g = ctx.createLinearGradient(0, y, 0, y + len);
+    g.addColorStop(0, 'rgba(90,10,10,0.6)');
+    g.addColorStop(1, 'rgba(90,10,10,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x, y, 2 + rng() * 2, len);
+  }
+  erodeCarving(ctx, rng, W, 300);
+  return finalize(canvas, false);
+}
+
+/** Flesh-book cover: leather, stitched border, asymmetric eyes, toothy slit. */
+export function tomeCoverTexture(seed: number): CanvasTexture {
+  const W = 256;
+  const [canvas, ctx] = makeCanvas(W, W);
+  const rng = mulberry32(seed);
+  // bound skin base
+  ctx.fillStyle = '#4a2e22';
+  ctx.fillRect(0, 0, W, W);
+  const img = ctx.getImageData(0, 0, W, W);
+  for (let y = 0; y < W; y++) {
+    for (let x = 0; x < W; x++) {
+      const n = fbm(x * 0.03, y * 0.03, seed, 4);
+      const i = (y * W + x) * 4;
+      const k = 0.75 + n * 0.5;
+      img.data[i] = Math.min(255, 74 * k + 20);
+      img.data[i + 1] = Math.min(255, 46 * k + 10);
+      img.data[i + 2] = Math.min(255, 34 * k + 8);
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  // stains
+  stains(ctx, W, W, rng, 7, 'rgba(20,8,6,A)', 0.5);
+  const cx = W / 2 + (rng() - 0.5) * 16;
+  // asymmetric watching eyes
+  const eyeY = 84 + rng() * 10;
+  for (const [ex, er] of [[cx - 52, 17], [cx + 48, 12]] as const) {
+    const g = ctx.createRadialGradient(ex, eyeY, 1, ex, eyeY, er);
+    g.addColorStop(0, 'rgba(216,207,184,0.95)');
+    g.addColorStop(0.75, 'rgba(190,175,150,0.9)');
+    g.addColorStop(1, 'rgba(190,175,150,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(ex, eyeY, er, 0, 7);
+    ctx.fill();
+    ctx.fillStyle = '#5a0d0d';
+    ctx.beginPath();
+    ctx.arc(ex, eyeY, er * 0.32, 0, 7);
+    ctx.fill();
+  }
+  // toothy mouth slit
+  const my = 168;
+  ctx.fillStyle = 'rgba(10,4,4,0.92)';
+  ctx.beginPath();
+  ctx.ellipse(cx, my, 52, 15, (rng() - 0.5) * 0.12, 0, 7);
+  ctx.fill();
+  ctx.fillStyle = '#d8cfb8';
+  for (let i = 0; i < 9; i++) {
+    const tx = cx - 44 + i * 11 + (rng() - 0.5) * 5;
+    const tl = 6 + rng() * 9;
+    ctx.beginPath();
+    ctx.moveTo(tx - 3.5, my - 9);
+    ctx.lineTo(tx + 3.5, my - 9);
+    ctx.lineTo(tx, my - 9 + tl);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(tx - 3, my + 9);
+    ctx.lineTo(tx + 3, my + 9);
+    ctx.lineTo(tx, my + 9 - tl * 0.8);
+    ctx.closePath();
+    ctx.fill();
+  }
+  // stitched border
+  ctx.strokeStyle = 'rgba(216,207,184,0.55)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([9, 7]);
+  ctx.strokeRect(12, 12, W - 24, W - 24);
+  ctx.setLineDash([]);
+  erodeCarving(ctx, rng, W, 150);
+  return finalize(canvas, false);
+}

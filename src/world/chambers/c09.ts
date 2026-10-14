@@ -55,7 +55,7 @@ export const C09: ChamberData = {
     { type: 'point', pos: [0, 3.6, -2], intensity: 14, distance: 13, fixture: true },
     { type: 'point', pos: [-6, 3.6, -12], intensity: 14, distance: 13, fixture: true },
     { type: 'point', pos: [6, 3.6, -17], intensity: 14, distance: 13, fixture: true },
-    { type: 'point', pos: [0, 3.6, -27], intensity: 14, distance: 13, fixture: true },
+    { type: 'point', pos: [0, 3.6, -27], intensity: 14, distance: 13, flicker: 'dying', fixture: true },
     { type: 'point', pos: [9, 3.6, -32], intensity: 12, distance: 9, fixture: true },
   ],
   decals: [
@@ -64,6 +64,10 @@ export const C09: ChamberData = {
     { kind: 'blood', pos: [-7, 0.01, -17.5], dir: '+y', size: 1.8, seed: 101 },
     { kind: 'scratches', pos: [-3.9, 1.4, -8], dir: '-x', size: 1.6, seed: 102 },
     { kind: 'scratches', pos: [0.2, 1.6, -19.8], dir: '+z', size: 1.8, seed: 103 },
+    // carved wards along the hunt path — one catches the light-pool edge
+    { kind: 'sigil', pos: [6, 1.6, -5.22], dir: '-z', size: 1.7, seed: 506 },
+    { kind: 'sigil', pos: [-4, 1.6, -9.78], dir: '+z', size: 1.6, seed: 507, rot: 0.3 },
+    { kind: 'sigil', pos: [3, 1.6, -14.78], dir: '+z', size: 1.9, seed: 508 },
   ],
   elements: [
     { type: 'lightZone', id: 'pool0', pos: [0, 2, 1], size: [4, 4, 3.5], active: true },
@@ -72,7 +76,11 @@ export const C09: ChamberData = {
     { type: 'lightZone', id: 'pool3', pos: [4, 2, -28], size: [4, 4, 3.5], active: true },
     { type: 'breaker', id: 'bk1', pos: [0, 1.5, -29.95], dir: '+z' },
     { type: 'door', id: 'dExit', pos: [9.3, 1.5, -30.25], size: [3.1, 3, 0.6], open: false },
+    // it watches through the walls' eyes
+    { type: 'prop', id: 'eyes1', pos: [-6, 4, -12.5], prop: 'eyes', seed: 704 },
+    { type: 'prop', id: 'chains1', pos: [8, 4, -17], prop: 'chains', seed: 705 },
     { type: 'terminal', id: 't1', pos: [-12.0, 1.7, -7], dir: '+x', loreId: 'c09.lore1' },
+    { type: 'terminal', id: 't2', pos: [-11.9, 1.7, -12.5], dir: '+x', loreId: 'c09.lore2' },
   ],
   waypoints: [
     { id: 'm0', pos: [0, 0, -2.5], links: ['g1'] },

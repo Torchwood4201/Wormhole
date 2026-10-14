@@ -12,6 +12,7 @@ import { makeAABB } from '../physics/collision';
 import { Collider, PhysicsWorld, SurfaceMaterial } from '../physics/PhysicsWorld';
 import { MaterialName, decalMaterials, materials } from '../textures/Materials';
 import { signTexture, valueNoise } from '../textures/TextureFactory';
+import { depthForChamber, fogBoostForDepth, lightDimForDepth } from '../entity/DepthDread';
 import type { ChamberData, DecalDef, Dir, LightDef, Mood } from './LevelData';
 
 interface MoodPreset {
@@ -93,11 +94,14 @@ export class Level {
 
   build(): void {
     const mood = MOODS[this.data.mood];
-    this.scene.fog = new FogExp2(mood.fog, this.data.fogDensity ?? mood.fogDensity);
+    // The deeper the chamber, the darker and thicker the air — dread you can see.
+    const depth = depthForChamber(this.data.id);
+    const dim = lightDimForDepth(depth);
+    this.scene.fog = new FogExp2(mood.fog, (this.data.fogDensity ?? mood.fogDensity) + fogBoostForDepth(depth));
     this.scene.background = new Color(mood.bg);
 
-    const amb = new AmbientLight(mood.ambient, mood.ambientIntensity);
-    const hemi = new HemisphereLight(mood.hemiSky, mood.hemiGround, mood.hemiIntensity);
+    const amb = new AmbientLight(mood.ambient, mood.ambientIntensity * dim);
+    const hemi = new HemisphereLight(mood.hemiSky, mood.hemiGround, mood.hemiIntensity * dim);
     this.group.add(amb, hemi);
 
     this.buildGeometry();
@@ -191,11 +195,15 @@ export class Level {
       mesh = new Mesh(new PlaneGeometry(size, size / 2), mat);
       this.disposables.push(mat, tex);
     } else {
-      const mat = def.kind === 'blood'
-        ? decalMaterials.blood(def.seed ?? 1)
-        : decalMaterials.scratches(def.seed ?? 1);
+      const seed = def.seed ?? 1;
+      const mat = def.kind === 'blood' ? decalMaterials.blood(seed)
+        : def.kind === 'scratches' ? decalMaterials.scratches(seed)
+        : def.kind === 'sigil' ? decalMaterials.sigil(seed)
+        : decalMaterials.ritual(seed);
       mesh = new Mesh(new PlaneGeometry(size, size), mat);
       this.disposables.push(mat);
+      // decal factories own their canvas texture — free it with the material
+      if (mat.map) this.disposables.push(mat.map);
     }
     const n = DIR_VECTORS[def.dir];
     mesh.position.set(...def.pos).addScaledVector(n, 0.012);

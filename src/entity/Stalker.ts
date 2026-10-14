@@ -10,6 +10,9 @@ import { CharacterController } from '../physics/CharacterController';
 import { PhysicsWorld } from '../physics/PhysicsWorld';
 import { LightZone } from '../world/elements/LightZone';
 import { events } from '../core/Events';
+import {
+  huntSpeedForDepth, lurkRetreatForDepth, stareToleranceForDepth,
+} from './DepthDread';
 
 export type StalkerState =
   | 'dormant' | 'lurking' | 'stalking' | 'hunting' | 'banished' | 'killing';
@@ -40,6 +43,8 @@ export class Stalker {
   pos = new Vector3();
   graph = new WaypointGraph();
   lightZones: LightZone[] = [];
+  /** 0 surface .. 1 the Seam. Faster hunts, thinner patience when deep. */
+  depth = 0;
   /** While true, hunting is paused at light-zone borders (player safe inside). */
   private stareTime = 0;
   private telegraphTimer = 0;
@@ -63,6 +68,10 @@ export class Stalker {
     this.graph = graph;
     this.lightZones = lightZones;
     this.setState('dormant');
+  }
+
+  setDepth(d: number): void {
+    this.depth = Math.max(0, Math.min(1, d));
   }
 
   setState(next: StalkerState, atWaypoint?: string): void {
@@ -178,7 +187,9 @@ export class Stalker {
     this.body.faceToward(this.player.pos, 4 * dt);
     const d = this.distanceToPlayer;
     if (this.isObserved()) this.stareTime += dt;
-    if (d < LURK_RETREAT_RANGE || this.stareTime > STARE_RETREAT_SECONDS) {
+    const retreatRange = lurkRetreatForDepth(this.depth);
+    const stareLimit = stareToleranceForDepth(this.depth);
+    if (d < retreatRange || this.stareTime > stareLimit) {
       this.setState('banished');
     }
   }
@@ -205,6 +216,7 @@ export class Stalker {
       this.body.faceToward(this.player.pos, 10 * dt);
       return;
     }
+    const huntSpeed = huntSpeedForDepth(this.depth);
     const zone = this.playerInLightZone();
     const los = this.hasLineToPlayer();
     if (zone) {
@@ -215,7 +227,7 @@ export class Stalker {
     } else if (this.graph.size > 0 && (this.distanceToPlayer > 3 || !los)) {
       // route via waypoints when far OR when a wall blocks the direct line —
       // it goes around obstacles instead of clipping straight through them.
-      this.followPath(dt, HUNT_SPEED, () =>
+      this.followPath(dt, huntSpeed, () =>
         this.graph.nearest(this.player.pos, (w) => !this.posInLightZone(w.pos)),
       );
     } else {
@@ -224,8 +236,8 @@ export class Stalker {
       _dir.y = 0;
       const d = _dir.length();
       if (d > 0.01) {
-        this.moveTowardClamped(this.player.pos, Math.min(HUNT_SPEED * dt, d));
-        this.moveSpeedNow = HUNT_SPEED;
+        this.moveTowardClamped(this.player.pos, Math.min(huntSpeed * dt, d));
+        this.moveSpeedNow = huntSpeed;
         this.body.faceToward(this.player.pos, 10 * dt);
       }
     }

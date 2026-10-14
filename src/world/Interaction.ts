@@ -9,6 +9,7 @@ import { throughPortalMatrix } from '../portal/PortalTransform';
 import type { PortalGun } from '../portal/PortalGun';
 import { Cube } from './elements/Cube';
 import { Terminal } from './elements/Terminal';
+import { Tome } from './elements/Tome';
 import { Breaker } from './elements/Breaker';
 import type { Level } from './Level';
 import { events } from '../core/Events';
@@ -28,6 +29,7 @@ const _m = new Matrix4();
 export type InteractTarget =
   | { kind: 'cube'; cube: Cube }
   | { kind: 'terminal'; terminal: Terminal }
+  | { kind: 'tome'; tome: Tome }
   | { kind: 'breaker'; breaker: Breaker }
   | null;
 
@@ -61,6 +63,7 @@ export class Interaction {
       let p: Vector3 | null = null;
       if (el instanceof Cube) p = el.body.pos;
       else if (el instanceof Terminal) p = el.pos;
+      else if (el instanceof Tome) p = el.pos;
       else if (el instanceof Breaker) p = el.pos;
       if (!p) continue;
       _to.subVectors(p, _eye);
@@ -71,6 +74,7 @@ export class Interaction {
         bestDot = dot;
         if (el instanceof Cube) best = { kind: 'cube', cube: el };
         else if (el instanceof Terminal) best = { kind: 'terminal', terminal: el };
+        else if (el instanceof Tome) best = { kind: 'tome', tome: el };
         else best = { kind: 'breaker', breaker: el as Breaker };
       }
     }

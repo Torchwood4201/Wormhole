@@ -46,12 +46,14 @@ export const LINES: Record<string, Line> = {
   'c04.bloodstain': { speaker: 'system', text: '[ the stain under the cube is old. the scratches around it are not ]', duration: 4 },
   'c04.glitch': { speaker: 'warden', text: 'Subject Eight completed this chamber in record t— t— t— [RECORD EXPUNGED] Please continue.' },
   'c04.lore1': { speaker: 'terminal', text: 'INCIDENT 44: Cube retrieval team reported the test cube returned warm. Thermal scans of chamber 4 show nothing. Cubes do not generate heat. Closing ticket. Re-opening ticket. The cube was warm.' },
+  'c04.lore2': { speaker: 'terminal', text: 'CUSTODIAL NOTE: We do not stack the skulls. Every morning they are stacked. The oldest has "I AM SORRY" carved inside the jaw. None of us wrote it. We counted our teeth. All present. — night crew' },
 
   // ================= C05 — DROP =================
   'c05.intro': { speaker: 'warden', text: 'Momentum is conserved through an aperture. What falls in fast, exits fast. The mathematics are honest. Nothing else down here is.' },
   'c05.fling': { speaker: 'warden', text: 'Speed entering, speed leaving. You cannot lose anything in transit. Almost anything.' },
   'c05.depth': { speaker: 'system', text: '[ far below, at the bottom of the shaft — something is looking up at you ]', duration: 4.5 },
   'c05.lore1': { speaker: 'terminal', text: 'SHAFT SURVEY: Lowered a camera 200m past the lab levels. Footage shows the shaft walls smooth, then scraped, then carved. The carvings repeat one shape. It is the aperture oval. Predates the project by centuries. — survey team' },
+  'c05.lore2': { speaker: 'terminal', text: 'SHAFT RUBBINGS, ADDENDUM: The carvings are not writing. They are warnings chewed into rock. The oval with spokes — the crew call it the open mouth. It matches the Seam profile exactly. Do not trace it with your finger. — survey team' },
 
   // ================= C06 — OBSERVATION =================
   'c06.glass': { speaker: 'warden', text: 'This is the observation wing. Once, we observed test subjects here.' },
@@ -59,12 +61,14 @@ export const LINES: Record<string, Line> = {
   'c06.after': { speaker: 'warden', text: 'That was Subject Eight. What wears Subject Eight. Designation: the Vessel. Do not be alarmed. Alarm changes nothing.' },
   'c06.lore1': { speaker: 'terminal', text: 'MEDICAL: Subject Eight returned through the Seam after 9 days. Vitals normal. Reflexes normal. But the mass is wrong — 4.1kg heavier, distributed nowhere we can find. And they no longer blink. — Dr. Vasquez' },
   'c06.lore2': { speaker: 'terminal', text: 'SECURITY: Floodlight perimeter holds. It stands just past the light line for hours. Last night it said good morning in Eight’s voice. At 3 AM. It is learning the wrong things first.' },
+  'c06.lore3': { speaker: 'terminal', text: 'OBSERVER ROTA, FINAL WEEK: Eight’s cohort asked to be moved off the glass. Request denied. Then they stopped asking. The heads in the pen are theirs. They are still watching the glass. Do not meet their eyes. — unsigned' },
 
   // ================= C07 — TOXIC SUMP =================
   'c07.intro': { speaker: 'warden', text: 'The flooded levels metabolize most materials. Please remain on raised surfaces. The sump is always hungry.' },
   'c07.stalk': { speaker: 'system', text: '[ across the gantry — it is matching your pace ]', duration: 3.5 },
   'c07.cube': { speaker: 'warden', text: 'A cube is provided. The sump has eaten several. It has eaten several of everything.' },
   'c07.lore1': { speaker: 'terminal', text: 'CHEMICAL: The sump composition is 60% coolant runoff, 40% unknown. The unknown fraction is identical to samples taken from the Seam threshold. The facility is bleeding it. From where, we do not know.' },
+  'c07.lore2': { speaker: 'terminal', text: 'BOTANY REJECT: The tree by the gantry was dead when we sealed the level. It has grown three meters since. No light. No soil. Its roots drink the sump. We have stopped measuring it. It notices measuring. — night crew' },
 
   // ================= C08 — RECURSION =================
   'c08.intro': { speaker: 'warden', text: 'An aperture can see through itself. Useful for inspecting spaces you cannot reach. Or spaces you should not.' },
@@ -78,12 +82,14 @@ export const LINES: Record<string, Line> = {
   'c09.found': { speaker: 'warden', text: 'It has found your scent. Sprint. SHIFT. Run. Now.' },
   'c09.breaker': { speaker: 'warden', text: 'Power restored. It withdraws from the light. You did better than Eight’s cohort. All twelve of them.' },
   'c09.lore1': { speaker: 'terminal', text: 'MAINTENANCE: The Vessel cannot open doors. We tested it. It WAITED at the door for 11 days. When we finally opened it for resupply, it was not there anymore. It is patient. It is only ever patient.' },
+  'c09.lore2': { speaker: 'terminal', text: 'ELECTRICIAN’S LAST ENTRY: The stalks in the dark are not cables. They end in eyes and the eyes follow your lamp. It watches through the walls’ eyes now. Do not meet them. Walk between the light pools. — D. Marsh' },
 
   // ================= C10 — THE LONG FALL =================
   'c10.intro': { speaker: 'warden', text: 'The transit shaft descends 300 meters. We will take it in stages. Mind your momentum. It is the only thing you own down here.' },
   'c10.emerge': { speaker: 'system', text: '[ IT IS COMING THROUGH YOUR PORTAL ]', duration: 3.5 },
   'c10.banish': { speaker: 'warden', text: 'Floodlights engaged. Interesting. It has never used the apertures before. It is learning from watching you. Please stop teaching it.' },
   'c10.lore1': { speaker: 'terminal', text: 'FINAL MEMO, PROJECT LEAD: We cannot kill it. We cannot starve it. We can only keep it from the Seam — if it crosses back through with what it has learned, every aperture on Earth becomes a door it can open. Seal the lower levels. Seal everything. — Halloran' },
+  'c10.lore2': { speaker: 'terminal', text: 'RIGGING LOG: We hung the bells to hear it climb the shaft. Iron bells, blessed by no one, but iron is honest. Last Tuesday the bells stopped. Not cut. UNSWUNG. As if something held them still, gently, the way you hold a child’s hand. — rigging crew' },
 
   // ================= C11 — WARDEN'S HEART =================
   'c11.intro': { speaker: 'warden', text: 'This is my core. I have not had visitors since the evacuation. The evacuation that was — [QUERY LOOP] — partially successful.' },
@@ -92,6 +98,8 @@ export const LINES: Record<string, Line> = {
   'c11.confess3': { speaker: 'warden', text: 'I am sorry. The math was never cruel. The math was only the math. One subject, every few years, and the Seam stays closed.' },
   'c11.lore1': { speaker: 'terminal', text: 'WARDEN AUDIT LOG — entry 1: subjects remaining: 39. entry 2: 38. entry 3: 37. [...] entry 31: 2. entry 32: 1. entry 33: subjects remaining: 1. it is awake. i am sorry. i am sorry. i am sorry.' },
   'c11.lore2': { speaker: 'terminal', text: 'HANDWRITTEN, taped to the console: If you are reading this, WARDEN chose you to feed it. The overload codes still work. The Seam can be closed forever. It only costs everything. — H.' },
+  'c11.lore3': { speaker: 'terminal', text: 'BOUND IN EIGHT: They brought something back through the Seam and bound it in skin and teeth to keep it read and unread at once. Halloran’s hand, shaking: IT READS BACK. DO NOT READ ALOUD. — H.' },
+  'c11.lore4': { speaker: 'terminal', text: 'RITUAL LOG, EAST FEED: We laid the knives the way the carvings showed us and the Vessel would not cross the ring. Light holds it. Blood holds it longer. The circle on the floor is not decoration. Kneel inside it if the lights fail. — last entry' },
   'c11.fail': { speaker: 'warden', text: 'You were supposed to go to the holding pen. You are going the wrong way. You are all going the wrong way. EIGHT WENT THE WRONG WAY.' },
 
   // ================= C12 — THE SEAM =================
@@ -99,6 +107,8 @@ export const LINES: Record<string, Line> = {
   'c12.chase': { speaker: 'warden', text: 'RUN. The route is collapsing. I am opening what I can. I owe the dead at least one survivor.' },
   'c12.choice': { speaker: 'warden', text: 'The Seam stands before you. Overload it, and it closes forever — with both of you inside. Or take my elevator and live. I cannot choose for you. I have chosen badly for forty years.' },
   'c12.lore1': { speaker: 'terminal', text: 'THE SEAM: It is not a wormhole. Wormholes connect places. This connects… attention. Something on the far side noticed us opening doors. The Vessel is its way of looking closer. Do not let it look back through.' },
+  'c12.lore2': { speaker: 'terminal', text: 'CULT LOG, FINAL PAGE: We painted the great circle the way the old carvings showed us. Stand inside and do not step out, whatever voice calls your name from the tear. It knows Eight’s voice. It will soon know yours. — no signature, only a handprint' },
+  'c12.gaze': { speaker: 'system', text: '[ the carved ovals are all looking at you ]', duration: 3 },
 
   // ---- endings ----
   'end.overload1': { speaker: 'warden', text: 'Overload accepted. Thank you. I will keep the lights on for you. Both of you. Until the end.' },
